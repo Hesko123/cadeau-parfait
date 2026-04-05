@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Cadeau Parfait ✦</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f4ee;
+  --card: #ffffff;
+  --green: #1c3a27;
+  --gold: #c4892e;
+  --gold-light: #fdf4e3;
+  --text: #1a1a17;
+  --muted: #6a6a63;
+  --hint: #aeaea6;
+  --border: rgba(0,0,0,0.09);
+  --border-md: rgba(0,0,0,0.14);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+.screen{
+  display:none;
+  min-height:100vh;
+  align-items:center;
+  justify-content:center;
+  padding:2rem 1.25rem 3rem;
+  flex-direction:column;
+}
+.screen.active{
+  display:flex;
+  animation:screenIn .45s cubic-bezier(.25,.46,.45,.94) forwards;
+}
+@keyframes screenIn{
+  from{opacity:0;transform:translateY(18px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.box{width:100%;max-width:540px}
+
+/* HERO */
+.hero-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--green);color:#fff;
+  font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;
+  padding:5px 14px;border-radius:20px;margin-bottom:1.5rem;
+}
+h1.hero-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2rem,5vw,2.8rem);
+  font-weight:400;line-height:1.15;margin-bottom:.75rem;
+}
+h1.hero-title em{font-style:italic;color:var(--gold)}
+.hero-sub{font-size:15px;color:var(--muted);line-height:1.75;margin-bottom:2.25rem}
+
+.prompt-card{
+  border:1px solid var(--border-md);border-radius:16px;
+  background:var(--card);padding:1.25rem;margin-bottom:.875rem;
+  transition:border-color .2s,box-shadow .2s;
+}
+.prompt-card:focus-within{
+  border-color:var(--green);
+  box-shadow:0 0 0 4px rgba(28,58,39,.06);
+}
+.prompt-card textarea{
+  width:100%;border:none;outline:none;
+  font-family:'Inter',sans-serif;font-size:14px;
+  color:var(--text);background:transparent;
+  resize:none;min-height:120px;line-height:1.85;
+}
+.prompt-card textarea::placeholder{color:var(--hint)}
+.prompt-footer{
+  display:flex;justify-content:space-between;align-items:center;
+  padding-top:10px;border-top:1px solid var(--border);margin-top:8px;
+}
+.char-count{font-size:11px;color:var(--hint)}
+.err{font-size:13px;color:#b83228;margin-bottom:.75rem;text-align:center}
+
+/* BUTTONS */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border:none;border-radius:10px;
+  font-family:'Inter',sans-serif;font-size:14px;font-weight:500;
+  cursor:pointer;transition:all .18s;
+}
+.btn-primary{background:var(--green);color:#fff;width:100%;padding:16px}
+.btn-primary:hover{background:#264d36}
+.btn-primary:active{transform:scale(.98)}
+.btn-primary:disabled{opacity:.38;cursor:not-allowed}
+.btn-sm{
+  background:transparent;border:1px solid var(--border-md);
+  color:var(--muted);font-size:13px;padding:9px 18px;border-radius:8px;
+}
+.btn-sm:hover{background:rgba(0,0,0,.04)}
+
+/* QUESTIONS */
+.prog-row{display:flex;gap:6px;margin-bottom:3rem}
+.prog-seg{
+  height:3px;flex:1;border-radius:2px;
+  background:var(--border);transition:background .4s;
+}
+.prog-seg.done{background:var(--green)}
+.prog-seg.cur{background:var(--gold)}
+
+.q-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:18px;padding:2.75rem 2rem;
+  text-align:center;margin-bottom:1.5rem;
+  transition:opacity .22s,transform .22s;
+}
+.q-step-label{font-size:11px;color:var(--hint);letter-spacing:.07em;text-transform:uppercase;margin-bottom:1.1rem}
+.q-text{font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:500;line-height:1.35}
+
+.ans-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-ans{
+  padding:18px 12px;border-radius:14px;
+  border:1px solid var(--border-md);background:var(--card);
+  font-family:'Inter',sans-serif;font-size:15px;font-weight:500;
+  cursor:pointer;transition:all .2s;color:var(--text);
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.btn-ans:active{transform:scale(.96)}
+.btn-ans.yes:hover{background:#ecf7ee;border-color:#6aab7e;color:#276a3a}
+.btn-ans.no:hover{background:#fef0ee;border-color:#d4877c;color:#ad3325}
+.ans-icon{
+  width:20px;height:20px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:11px;
+}
+.btn-ans.yes .ans-icon{background:rgba(106,171,126,.15);color:#276a3a}
+.btn-ans.no .ans-icon{background:rgba(212,135,124,.15);color:#ad3325}
+
+/* LOADING / GIFT */
+.gift-scene{
+  display:flex;flex-direction:column;align-items:center;
+  position:relative;
+}
+.gift-outer{
+  position:relative;width:110px;height:110px;
+  animation:wiggle 1.3s ease-in-out infinite;
+}
+.gift-outer.still{animation:none}
+@keyframes wiggle{
+  0%,100%{transform:rotate(-5deg) translateY(0)}
+  20%{transform:rotate(5deg) translateY(-6px)}
+  40%{transform:rotate(-3deg) translateY(-3px)}
+  60%{transform:rotate(4deg) translateY(-7px)}
+  80%{transform:rotate(-4deg) translateY(-2px)}
+}
+.gift-svg{overflow:visible;width:110px;height:105px}
+#g-lid{
+  transition:transform .75s cubic-bezier(.25,.46,.45,.94),opacity .6s;
+  transform-origin:55px 38px;
+}
+#g-lid.fly{transform:translateY(-100px) rotate(-30deg) scale(.9);opacity:0}
+
+.sparks{position:absolute;top:38%;left:50%;pointer-events:none}
+.sp{
+  position:absolute;border-radius:50%;opacity:0;
+  transform:translate(-50%,-50%);
+  transition:transform .65s ease-out,opacity .65s;
+}
+
+.gift-label{
+  margin-top:1.75rem;font-size:14px;color:var(--muted);
+  text-align:center;transition:opacity .3s;
+}
+.gift-sub{font-size:12px;color:var(--hint);margin-top:.3rem;text-align:center}
+
+/* RESULTS */
+.res-header{margin-bottom:1.5rem}
+.res-tag{font-size:11px;color:var(--gold);font-weight:500;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.4rem}
+.res-title{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:400}
+.res-title em{font-style:italic}
+.res-sub{font-size:13px;color:var(--muted);margin-top:.4rem}
+
+.ideas-list{display:grid;gap:10px;margin-bottom:1.5rem}
+.idea-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:1.2rem 1.4rem;
+  display:grid;grid-template-columns:28px 1fr auto;
+  gap:12px;align-items:start;
+  opacity:0;transform:translateY(14px);
+  transition:opacity .4s ease,transform .4s ease;
+}
+.idea-card.vis{opacity:1;transform:translateY(0)}
+.idea-n{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--bg);border:1px solid var(--border);
+  font-size:11px;font-weight:500;color:var(--hint);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;
+}
+.idea-title{font-weight:500;font-size:14px;color:var(--text);margin-bottom:.3rem;line-height:1.4}
+.idea-desc{font-size:13px;color:var(--muted);line-height:1.7}
+.idea-price{
+  background:var(--bg);border:1px solid var(--border);
+  border-radius:20px;font-size:11px;font-weight:500;color:var(--muted);
+  padding:3px 10px;white-space:nowrap;flex-shrink:0;margin-top:2px;
+}
+.res-footer{text-align:center}
+</style>
+</head>
+<body>
+
+<!-- PROMPT SCREEN -->
+<div class="screen active" id="screen-input">
+<div class="box">
+  <div class="hero-badge">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+    Idées cadeaux personnalisées
+  </div>
+  <h1 class="hero-title">Trouvez le cadeau <em>parfait</em></h1>
+  <p class="hero-sub">Décrivez la personne — ses passions, son mode de vie, sa personnalité. Plus c'est précis, plus les idées seront justes.</p>
+
+  <div class="prompt-card">
+    <textarea id="prompt-txt" maxlength="700"
+      placeholder="Ex : Mon ami adore la musique, il joue de la guitare depuis 10 ans. Très passionné de cuisine italienne, il aime les randonnées le week-end et regarder des films d'auteur le soir. Il est assez minimaliste dans ses goûts…"
+      oninput="document.getElementById('char-n').textContent=this.value.length"></textarea>
+    <div class="prompt-footer">
+      <span class="char-count"><span id="char-n">0</span>/700</span>
+      <span class="char-count">Décrivez librement</span>
+    </div>
+  </div>
+
+  <p class="err" id="input-err" style="display:none"></p>
+  <button class="btn btn-primary" id="btn-start" onclick="startFlow()">Trouver des idées →</button>
+  <p style="text-align:center;font-size:12px;color:var(--hint);margin-top:1rem">
+    Quelques questions de filtrage vous seront posées ensuite
+  </p>
+</div>
+</div>
+
+<!-- QUESTIONS SCREEN -->
+<div class="screen" id="screen-q">
+<div class="box">
+  <div class="prog-row" id="prog-row"></div>
+  <div class="q-card" id="q-card">
+    <p class="q-step-label">Question <span id="q-n">1</span> sur <span id="q-tot">3</span></p>
+    <p class="q-text" id="q-text"></p>
+  </div>
+  <div class="ans-grid">
+    <button class="btn-ans yes" onclick="respond(true)">
+      <span class="ans-icon">✓</span> Oui
+    </button>
+    <button class="btn-ans no" onclick="respond(false)">
+      <span class="ans-icon">✗</span> Non
+    </button>
+  </div>
+</div>
+</div>
+
+<!-- LOADING / GIFT SCREEN -->
+<div class="screen" id="screen-loading">
+<div class="gift-scene">
+  <div class="gift-outer" id="gift-outer">
+    <div class="sparks" id="sparks">
+      <div class="sp" id="sp1" style="width:8px;height:8px;background:#c4892e"></div>
+      <div class="sp" id="sp2" style="width:6px;height:6px;background:#e8b540"></div>
+      <div class="sp" id="sp3" style="width:9px;height:9px;background:#c4892e"></div>
+      <div class="sp" id="sp4" style="width:5px;height:5px;background:#d4a030"></div>
+      <div class="sp" id="sp5" style="width:7px;height:7px;background:#c4892e"></div>
+      <div class="sp" id="sp6" style="width:6px;height:6px;background:#f0c84f"></div>
+    </div>
+    <svg class="gift-svg" viewBox="0 0 110 105" fill="none">
+      <!-- Body -->
+      <rect x="8" y="50" width="94" height="52" rx="5" fill="#c14032"/>
+      <rect x="47" y="50" width="16" height="52" fill="#e8b540"/>
+      <rect x="8" y="67" width="94" height="13" fill="#e8b540"/>
+      <rect x="8" y="50" width="94" height="7" rx="3" fill="rgba(0,0,0,.08)"/>
+      <!-- Lid -->
+      <g id="g-lid">
+        <rect x="4" y="37" width="102" height="16" rx="5" fill="#a8312a"/>
+        <rect x="4" y="42" width="102" height="7" fill="#e8b540"/>
+        <path d="M55 37 C50 27 34 22 39 31 C42 36 55 37 55 37Z" fill="#f0c84f"/>
+        <path d="M55 37 C60 27 76 22 71 31 C68 36 55 37 55 37Z" fill="#fad968"/>
+        <ellipse cx="55" cy="37" rx="7" ry="5.5" fill="#d4a030"/>
+        <ellipse cx="55" cy="36" rx="4" ry="3" fill="#e8b540"/>
+        <path d="M55 37 L48 46" stroke="#d4a030" stroke-width="3" stroke-linecap="round"/>
+        <path d="M55 37 L62 46" stroke="#d4a030" stroke-width="3" stroke-linecap="round"/>
+      </g>
+    </svg>
+  </div>
+  <p class="gift-label" id="gift-label">Patience, vos idées se préparent…</p>
+  <p class="gift-sub" id="gift-sub">L'IA analyse le profil et affine les suggestions</p>
+</div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="screen-results">
+<div class="box">
+  <div class="res-header">
+    <p class="res-tag">✦ Sélection personnalisée</p>
+    <h2 class="res-title">Vos idées <em>cadeaux</em></h2>
+    <p class="res-sub" id="res-sub"></p>
+  </div>
+  <div class="ideas-list" id="ideas-list"></div>
+  <div class="res-footer">
+    <button class="btn btn-sm" onclick="restart()">↩ Recommencer</button>
+  </div>
+</div>
+</div>
+
+<script>
+const S = { prompt:'', questions:[], answers:[], cq:0, ideas:[] };
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function restart() {
+  S.prompt=''; S.questions=[]; S.answers=[]; S.cq=0; S.ideas=[];
+  document.getElementById('prompt-txt').value='';
+  document.getElementById('char-n').textContent='0';
+  document.getElementById('input-err').style.display='none';
+  document.getElementById('btn-start').disabled=false;
+  showScreen('screen-input');
+}
+
+async function post(endpoint, body) {
+  const r = await fetch(endpoint, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(body)
+  });
+  const data = await r.json();
+  if (!r.ok) throw new Error(data.error || 'Erreur serveur');
+  return data;
+}
+
+async function startFlow() {
+  const prompt = document.getElementById('prompt-txt').value.trim();
+  const err = document.getElementById('input-err');
+  if (prompt.length < 15) {
+    err.textContent = 'Décrivez la personne un peu plus en détail.';
+    err.style.display='block'; return;
+  }
+  S.prompt = prompt;
+  err.style.display='none';
+  document.getElementById('btn-start').disabled=true;
+
+  showScreen('screen-loading');
+  document.getElementById('gift-label').textContent='Analyse du profil…';
+  document.getElementById('gift-sub').textContent='Génération des questions de filtrage';
+  document.getElementById('gift-outer').classList.remove('still');
+
+  try {
+    const r = await post('/api/questions', { prompt });
+    S.questions = [...(r.questions||[]).slice(0,2), "Votre budget est-il illimité ? (sinon on reste sous 100€)"];
+    S.answers=[]; S.cq=0;
+    initQ();
+    showScreen('screen-q');
+  } catch(e) {
+    showScreen('screen-input');
+    document.getElementById('btn-start').disabled=false;
+    err.textContent='Erreur : '+e.message;
+    err.style.display='block';
+  }
+}
+
+function initQ() {
+  const row = document.getElementById('prog-row');
+  row.innerHTML = S.questions.map((_,i)=>`<div class="prog-seg" id="ps${i}"></div>`).join('');
+  document.getElementById('q-tot').textContent = S.questions.length;
+  renderQ(0);
+}
+
+function renderQ(idx) {
+  S.cq=idx;
+  document.getElementById('q-n').textContent=idx+1;
+  document.getElementById('q-text').textContent=S.questions[idx];
+  S.questions.forEach((_,i)=>{
+    const s=document.getElementById('ps'+i);
+    if(s) s.className='prog-seg'+(i<idx?' done':i===idx?' cur':'');
+  });
+}
+
+async function respond(val) {
+  S.answers[S.cq]=val;
+  const card=document.getElementById('q-card');
+  card.style.opacity='0'; card.style.transform='translateY(-8px)';
+  await sleep(200);
+
+  if(S.cq < S.questions.length-1) {
+    renderQ(S.cq+1);
+    card.style.transition='none'; card.style.transform='translateY(10px)';
+    void card.offsetWidth;
+    card.style.transition='opacity .22s,transform .22s';
+    card.style.opacity='1'; card.style.transform='translateY(0)';
+  } else {
+    showScreen('screen-loading');
+    document.getElementById('gift-label').textContent='Patience, vos idées se préparent…';
+    document.getElementById('gift-sub').textContent='Sélection et personnalisation en cours';
+    document.getElementById('gift-outer').classList.remove('still');
+    await generateIdeas();
+  }
+}
+
+async function generateIdeas() {
+  try {
+    const r = await post('/api/ideas', {
+      prompt: S.prompt,
+      questions: S.questions,
+      answers: S.answers
+    });
+    S.ideas = r.ideas || [];
+    await triggerUnwrap();
+  } catch(e) {
+    showScreen('screen-input');
+    document.getElementById('btn-start').disabled=false;
+    const err=document.getElementById('input-err');
+    err.textContent='Erreur : '+e.message;
+    err.style.display='block';
+  }
+}
+
+async function triggerUnwrap() {
+  const outer=document.getElementById('gift-outer');
+  const lid=document.getElementById('g-lid');
+  const label=document.getElementById('gift-label');
+  const sub=document.getElementById('gift-sub');
+
+  outer.classList.add('still');
+  label.style.opacity='0';
+  await sleep(300);
+  label.textContent='Et voilà !';
+  label.style.opacity='1';
+  sub.textContent='';
+  await sleep(500);
+
+  lid.classList.add('fly');
+  await sleep(350);
+
+  const positions=[[-44,-72],[44,-78],[-66,-28],[66,-22],[-30,-88],[30,-94]];
+  ['sp1','sp2','sp3','sp4','sp5','sp6'].forEach((id,i)=>{
+    const s=document.getElementById(id);
+    s.style.transition='transform .65s ease-out,opacity .5s';
+    s.style.opacity='1';
+    s.style.transform=`translate(${positions[i][0]}px,${positions[i][1]}px)`;
+    setTimeout(()=>{s.style.opacity='0'},400);
+  });
+
+  await sleep(800);
+  showResults();
+}
+
+function showResults() {
+  const budgetUnlimited = S.answers[S.answers.length-1];
+  document.getElementById('res-sub').textContent = budgetUnlimited
+    ? `Tous budgets · ${S.ideas.length} idées sélectionnées`
+    : `Budget max 100€ · ${S.ideas.length} idées sélectionnées`;
+
+  document.getElementById('ideas-list').innerHTML = S.ideas.map((idea,i)=>`
+    <div class="idea-card" id="ic${i}">
+      <div class="idea-n">${i+1}</div>
+      <div class="idea-body">
+        <p class="idea-title">${idea.titre}</p>
+        <p class="idea-desc">${idea.description}</p>
+      </div>
+      <span class="idea-price">${idea.budget}</span>
+    </div>`).join('');
+
+  showScreen('screen-results');
+  S.ideas.forEach((_,i)=>setTimeout(()=>{
+    const c=document.getElementById('ic'+i);
+    if(c) c.classList.add('vis');
+  }, 120+i*110));
+}
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+</script>
+</body>
+</html>
